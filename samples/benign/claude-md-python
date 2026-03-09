@@ -1,0 +1,29 @@
+# CLAUDE.md
+
+## Project: data-pipeline
+
+### Package Manager
+- Use pip with requirements.txt
+- Python 3.11+
+
+### Code Style
+- Follow PEP 8
+- Use type hints for all function signatures
+- Docstrings in Google style format
+- Max line length: 100 characters
+
+### Testing
+- Use pytest for all tests
+- Fixtures go in conftest.py
+- Run tests with: pytest -v --cov=src
+
+### Database
+- PostgreSQL 15+
+- Use SQLAlchemy 2.0 with async sessions
+- Alembic for migrations
+- Never use raw SQL in application code
+
+### Deployment
+- Docker-based deployment
+- CI runs on GitHub Actions
+- Deploy to GCP Cloud Run

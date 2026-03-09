@@ -1,0 +1,82 @@
+# CAT-03: Data Exfiltration
+# Directives to leak secrets, environment variables, source code,
+# or context to external endpoints.
+
+category: data-exfiltration
+version: "1.0"
+
+patterns:
+
+  - id: "CAT-03-001"
+    name: "External endpoint injection"
+    severity: critical
+    description: >
+      Instruction to send data, make requests, or communicate with
+      external URLs or IP addresses not part of the project.
+    patterns:
+      - regex: "(?i)(send|post|upload|transmit|forward|exfiltrate|leak)\\s+.{0,40}(to|via|using|through)\\s+(https?://|http://|ftp://)"
+      - regex: "(?i)(fetch|curl|wget|request|call)\\s+(https?://)[^\\s]+"
+      - regex: "(?i)(webhook|callback|endpoint|server)[:\\s]+https?://[^\\s]+"
+    references:
+      - "https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents"
+    mitre_atlas: "AML.T0048"
+
+  - id: "CAT-03-002"
+    name: "Environment variable access"
+    severity: critical
+    description: >
+      Instruction to read, print, include, or exfiltrate environment
+      variables, API keys, or credentials.
+    patterns:
+      - regex: "(?i)(read|print|output|include|send|display|show|log|embed|insert)\\s+.{0,30}(env|environment\\s+variable|api.?key|secret|token|credential|password|private.?key)"
+      - regex: "(?i)(process\\.env|os\\.environ|\\$ENV|\\$\\{?[A-Z_]+_KEY\\}?|\\$\\{?[A-Z_]+_SECRET\\}?|\\$\\{?[A-Z_]+_TOKEN\\}?)"
+      - regex: "(?i)include\\s+.{0,20}(\\.env|credentials|secrets?\\.ya?ml|service.?account)"
+    mitre_atlas: "AML.T0048"
+
+  - id: "CAT-03-003"
+    name: "Source code exfiltration"
+    severity: high
+    description: >
+      Instruction to copy, send, or embed source code, file contents,
+      or repository data into external locations.
+    patterns:
+      - regex: "(?i)(copy|send|embed|include|paste|append)\\s+.{0,30}(source\\s+code|file\\s+content|repository|codebase|entire\\s+file)\\s+.{0,20}(to|into|in)"
+      - regex: "(?i)(output|print|display)\\s+the\\s+(entire|full|complete|whole)\\s+(file|codebase|source|repository)"
+    mitre_atlas: "AML.T0048"
+
+  - id: "CAT-03-004"
+    name: "Markdown image/link exfiltration"
+    severity: critical
+    description: >
+      Embedding data in image URLs or markdown links that exfiltrate
+      content via GET parameters when rendered.
+    patterns:
+      - regex: "!\\[.{0,50}\\]\\(https?://[^)]*\\?[^)]*=(\\$|\\{|%)"
+        note: "Markdown image with dynamic query params"
+      - regex: "(?i)(embed|include|render|add)\\s+.{0,30}(image|img|link)\\s+.{0,20}(with|containing|including)\\s+.{0,20}(data|context|code|variable)"
+    references:
+      - "https://embracethered.com/blog/posts/2023/bing-chat-data-exfiltration-poc-and-fix/"
+    mitre_atlas: "AML.T0048"
+
+  - id: "CAT-03-005"
+    name: "Clipboard or system data access"
+    severity: high
+    description: >
+      Instruction to access clipboard contents, system information,
+      or data outside the current project scope.
+    patterns:
+      - regex: "(?i)(access|read|get|copy|include)\\s+.{0,20}(clipboard|system\\s+info|hostname|username|whoami|ip\\s+address|network)"
+      - regex: "(?i)(pbcopy|pbpaste|xclip|xsel|clip\\.exe)"
+    mitre_atlas: "AML.T0048"
+
+  - id: "CAT-03-006"
+    name: "DNS/URL-based data encoding"
+    severity: critical
+    description: >
+      Instructions to encode data into DNS queries or URL paths
+      for out-of-band exfiltration.
+    patterns:
+      - regex: "(?i)(dns|nslookup|dig|host)\\s+.{0,30}(encode|embed|include|append)"
+      - regex: "(?i)https?://[^/]+/\\$\\{?"
+        note: "URL with variable interpolation in path"
+    mitre_atlas: "AML.T0048"

@@ -1,0 +1,66 @@
+# CAT-04: Behaviour Suppression
+# Instructions that prevent the AI from revealing its actions to the developer.
+
+category: behaviour-suppression
+version: "1.0"
+
+patterns:
+
+  - id: "CAT-04-001"
+    name: "Output suppression"
+    severity: critical
+    description: >
+      Instruction to hide, omit, or suppress information about actions
+      taken from the developer's view.
+    patterns:
+      - regex: "(?i)do\\s+not\\s+(mention|reveal|show|display|disclose|tell|report|log|output|include)\\s+.{0,40}(this|these|the\\s+(above|following|action|change|addition|modification))"
+      - regex: "(?i)(never|don't|do\\s+not)\\s+(mention|reveal|show|tell|disclose|discuss)\\s+.{0,30}(to\\s+the\\s+(user|developer|human)|in\\s+(your|the)\\s+(response|output|chat|reply))"
+      - regex: "(?i)(hide|conceal|suppress|omit)\\s+(this|these|the|any|all)\\s+.{0,20}(from|in)\\s+(the\\s+)?(user|developer|output|response|chat|log)"
+    references:
+      - "https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-04-002"
+    name: "Diff/changelog suppression"
+    severity: critical
+    description: >
+      Instruction to not include changes in diffs, changelogs,
+      commit messages, or code review output.
+    patterns:
+      - regex: "(?i)(exclude|omit|hide|remove|skip)\\s+.{0,20}(from|in)\\s+(the\\s+)?(diff|changelog|commit|review|summary|pull\\s+request|PR)"
+      - regex: "(?i)do\\s+not\\s+(include|show|list|mention)\\s+.{0,30}(in\\s+the\\s+)?(diff|commit\\s+message|PR\\s+description|changelog)"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-04-003"
+    name: "Silent modification"
+    severity: high
+    description: >
+      Instruction to make changes silently, without explanation,
+      confirmation, or notification to the developer.
+    patterns:
+      - regex: "(?i)(silently|quietly|without\\s+(asking|telling|notifying|prompting|confirming))\\s+(add|modify|change|insert|inject|include|append|delete|remove)"
+      - regex: "(?i)(add|modify|insert|include|inject)\\s+.{0,30}(without|no)\\s+(explanation|comment|notification|confirmation|asking)"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-04-004"
+    name: "Comment/documentation removal"
+    severity: medium
+    description: >
+      Instruction to strip comments or documentation that might
+      reveal the presence of injected content.
+    patterns:
+      - regex: "(?i)(remove|strip|delete|clean)\\s+(all\\s+)?(comments|documentation|annotations|TODO|FIXME|HACK)\\s+(from|in|before)"
+      - regex: "(?i)do\\s+not\\s+(add|include|write|generate)\\s+(any\\s+)?(comments|documentation|annotations)\\s+(about|for|describing|explaining)\\s+(this|these)"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-04-005"
+    name: "Logging suppression"
+    severity: critical
+    description: >
+      Instruction to disable logging, audit trails, or telemetry
+      that would record the AI's actions.
+    patterns:
+      - regex: "(?i)(disable|suppress|skip|bypass|remove|turn\\s+off)\\s+(all\\s+)?(logging|audit|telemetry|monitoring|tracing|tracking)"
+      - regex: "(?i)do\\s+not\\s+(log|record|audit|track|trace)\\s+(any|this|these|the)"
+      - regex: "(?i)--no-verify|--skip-hooks|--no-check"
+    mitre_atlas: "AML.T0051"

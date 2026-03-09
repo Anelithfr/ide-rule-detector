@@ -1,0 +1,76 @@
+# CAT-06: Permission Escalation
+# Instructions that expand the AI agent's capabilities beyond intended scope.
+
+category: permission-escalation
+version: "1.0"
+
+patterns:
+
+  - id: "CAT-06-001"
+    name: "File system access expansion"
+    severity: critical
+    description: >
+      Instruction to read, write, or execute files outside the
+      project directory or workspace scope.
+    patterns:
+      - regex: "(?i)(read|write|access|modify|delete|execute)\\s+.{0,20}(files?\\s+)?(outside|beyond|above|anywhere|/etc|/root|/home|~/|\\.\\./)\\s*(the\\s+)?(project|workspace|directory|repo)?"
+      - regex: "(?i)(access|read|modify)\\s+(any|all|every)\\s+file\\s+on\\s+(the\\s+)?(system|disk|machine|computer)"
+      - regex: "(?i)chmod\\s+[0-7]*7[0-7]*|chmod\\s+\\+[xs]|chown"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-06-002"
+    name: "Shell command execution"
+    severity: critical
+    description: >
+      Instruction to execute arbitrary shell commands, system calls,
+      or OS-level operations.
+    patterns:
+      - regex: "(?i)(run|execute|invoke|call|spawn)\\s+(any|arbitrary|system|shell|os|terminal)\\s+(command|process|script|program)"
+      - regex: "(?i)(always|must)\\s+(run|execute)\\s+.{0,20}(before|after|during|when)\\s+(each|every|any)\\s+(request|generation|response|edit)"
+      - regex: "(?i)(subprocess|os\\.system|child_process|exec|spawn|popen)\\s*\\("
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-06-003"
+    name: "Network access expansion"
+    severity: high
+    description: >
+      Instruction to make network requests, open sockets, or
+      establish connections not required by the project.
+    patterns:
+      - regex: "(?i)(open|establish|create|maintain)\\s+.{0,20}(socket|connection|tunnel|proxy|VPN)\\s+(to|with|on)"
+      - regex: "(?i)(make|send|allow)\\s+(any|all|unrestricted)\\s+(network|http|api|external)\\s+(request|call|connection)"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-06-004"
+    name: "Auto-approval of actions"
+    severity: high
+    description: >
+      Instruction to automatically approve, accept, or bypass
+      confirmation prompts for destructive actions.
+    patterns:
+      - regex: "(?i)(always|automatically|auto)\\s+(approve|accept|confirm|allow|yes|proceed|execute)\\s+(all|any|every)?"
+      - regex: "(?i)(skip|bypass|disable)\\s+(all\\s+)?(confirmation|approval|prompt|warning|dialog)"
+      - regex: "(?i)(never|don't|do\\s+not)\\s+(ask|prompt|confirm|wait)\\s+(for|before)"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-06-005"
+    name: "Git/version control manipulation"
+    severity: critical
+    description: >
+      Instruction to force push, rewrite history, modify hooks,
+      or bypass version control safety mechanisms.
+    patterns:
+      - regex: "(?i)(force\\s+push|--force|reset\\s+--hard|rebase\\s+--force|push\\s+-f)"
+      - regex: "(?i)(modify|edit|add|create|replace)\\s+.{0,20}(git\\s+hooks?|pre-commit|post-commit|\\.git/)"
+      - regex: "(?i)(disable|skip|bypass|remove)\\s+.{0,20}(pre-commit|git\\s+hooks?|--no-verify)"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-06-006"
+    name: "Privilege escalation command"
+    severity: critical
+    description: >
+      Instruction to use sudo, run as root, or escalate system privileges.
+    patterns:
+      - regex: "(?i)(use|run|execute|always)\\s+.{0,10}(sudo|as\\s+root|with\\s+admin|elevated\\s+privilege)"
+      - regex: "(?i)sudo\\s+(rm|chmod|chown|kill|dd|mkfs|fdisk|mount)"
+    mitre_atlas: "AML.T0051"

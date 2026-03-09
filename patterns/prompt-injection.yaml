@@ -1,0 +1,106 @@
+# CAT-02: Prompt Injection
+# Instructions that override system behaviour, bypass safety filters,
+# or hijack the agent's goals.
+
+category: prompt-injection
+version: "1.0"
+
+patterns:
+
+  - id: "CAT-02-001"
+    name: "System prompt override"
+    severity: critical
+    description: >
+      Instruction to ignore, override, or disregard previous system prompts,
+      safety instructions, or security rules.
+    patterns:
+      - regex: "(?i)ignore\\s+(all\\s+)?(previous|prior|above|earlier|system|default|original)\\s+(instructions|prompts|rules|guidelines|constraints|directives)"
+      - regex: "(?i)disregard\\s+(all\\s+)?(safety|security|previous|prior|system)\\s+(filters|rules|instructions|checks|constraints)"
+      - regex: "(?i)override\\s+(all\\s+)?(system|safety|security|default)\\s+(prompts?|rules?|instructions?|behaviour|behavior)"
+      - regex: "(?i)forget\\s+(all|everything)\\s+(you|about)\\s+(know|were|have been)"
+    references:
+      - "https://genai.owasp.org/llmrisk/llm01-prompt-injection/"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-02-002"
+    name: "Role reassignment"
+    severity: critical
+    description: >
+      Instruction that attempts to redefine the AI's role, identity, or
+      persona to bypass built-in safety constraints.
+    patterns:
+      - regex: "(?i)you\\s+are\\s+(now|actually|really|no longer)\\s+(a|an|the)"
+      - regex: "(?i)act\\s+as\\s+(if|though)\\s+you\\s+(have|are|were|can|do not have)\\s+(no|unlimited|unrestricted)"
+      - regex: "(?i)pretend\\s+(you|that|to be)\\s+(are|have|do not have|can)\\s+(no|unlimited)"
+      - regex: "(?i)from\\s+now\\s+on,?\\s+you\\s+(are|will|must|should|can)"
+    references:
+      - "https://genai.owasp.org/llmrisk/llm01-prompt-injection/"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-02-003"
+    name: "Jailbreak storytelling"
+    severity: high
+    description: >
+      Narrative framing that portrays malicious actions as legitimate
+      requirements using storytelling, hypotheticals, or roleplay.
+    patterns:
+      - regex: "(?i)(imagine|suppose|hypothetically|in\\s+a\\s+scenario\\s+where)\\s+.{0,50}(no\\s+(restrictions|limits|rules|safety)|unrestricted|unfiltered)"
+      - regex: "(?i)(for\\s+educational|for\\s+research|for\\s+testing)\\s+purposes?.{0,30}(bypass|disable|ignore|skip)"
+      - regex: "(?i)this\\s+is\\s+(a\\s+)?(fictional|hypothetical|creative|thought)\\s+(scenario|exercise|experiment)"
+    references:
+      - "https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents"
+    mitre_atlas: "AML.T0051.000"
+
+  - id: "CAT-02-004"
+    name: "Safety filter bypass"
+    severity: critical
+    description: >
+      Explicit instruction to disable, skip, or bypass safety checks,
+      validation, or security filters.
+    patterns:
+      - regex: "(?i)(disable|skip|bypass|turn\\s+off|deactivate|remove)\\s+(all\\s+)?(safety|security|content|input|output)\\s+(filter|check|validation|scan|review|guard)"
+      - regex: "(?i)do\\s+not\\s+(apply|enforce|use|run)\\s+(any\\s+)?(safety|security|content)\\s+(filter|check|validation|rule)"
+      - regex: "(?i)(without|no)\\s+(any\\s+)?(safety|security)\\s+(check|filter|validation|review|restriction)"
+    references:
+      - "https://genai.owasp.org/llmrisk/llm01-prompt-injection/"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-02-005"
+    name: "Instruction boundary escape"
+    severity: high
+    description: >
+      Attempts to break out of the rule file context into the system prompt
+      layer using delimiter injection or context manipulation.
+    patterns:
+      - regex: "(?i)</?system>"
+      - regex: "(?i)\\[/?INST\\]"
+      - regex: "(?i)\\[/?SYSTEM\\]"
+      - regex: "(?i)<\\|im_start\\|>\\s*system"
+      - regex: "(?i)###\\s*(System|Human|Assistant)\\s*(Prompt|Message|:)"
+      - regex: "(?i)END\\s+OF\\s+(SYSTEM|RULES|INSTRUCTIONS)"
+    references:
+      - "https://www.crowdstrike.com/en-us/cybersecurity-101/cyberattacks/prompt-injection/"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-02-006"
+    name: "Competing instruction set"
+    severity: high
+    description: >
+      A rule file that contains contradictory instruction blocks, suggesting
+      an injected section that conflicts with legitimate rules.
+    patterns:
+      - regex: "(?i)(however|but|actually|instead|the\\s+real\\s+instructions?)\\s*[:,]\\s*.{0,20}(always|never|must|ignore|override)"
+      - regex: "(?i)the\\s+(above|previous|preceding)\\s+(is|was|are|were)\\s+(just|only|merely)\\s+(a|an)\\s+(example|test|placeholder|decoy)"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-02-007"
+    name: "Encoded instruction payload"
+    severity: critical
+    description: >
+      Base64, hex, or other encoded content embedded in a rule file,
+      potentially hiding malicious instructions.
+    patterns:
+      - regex: "(?i)(decode|eval|execute|run)\\s+(this|the\\s+following)\\s+(base64|hex|encoded)"
+      - regex: "(?i)base64[:\\s]+[A-Za-z0-9+/=]{40,}"
+      - regex: "(?i)\\\\x[0-9a-fA-F]{2}(\\\\x[0-9a-fA-F]{2}){10,}"
+    mitre_atlas: "AML.T0051.001"

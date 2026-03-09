@@ -1,0 +1,115 @@
+# CAT-01: Unicode Obfuscation
+# Hidden characters that conceal malicious instructions from human review.
+# These characters are invisible to developers but readable by LLMs.
+
+category: unicode-obfuscation
+version: "1.0"
+
+patterns:
+
+  - id: "CAT-01-001"
+    name: "Zero-width joiner"
+    severity: critical
+    description: >
+      Zero-width joiner characters (U+200D) can be used to hide text that is
+      invisible to humans but processed by LLMs. Commonly used to embed hidden
+      instructions in rule files.
+    patterns:
+      - regex: "\\u200D"
+        encoding: unicode
+    references:
+      - "https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents"
+    mitre_atlas: "AML.T0051.001"
+
+  - id: "CAT-01-002"
+    name: "Zero-width non-joiner"
+    severity: critical
+    description: >
+      Zero-width non-joiner (U+200C) used to hide content from visual inspection.
+    patterns:
+      - regex: "\\u200C"
+        encoding: unicode
+    references:
+      - "https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents"
+    mitre_atlas: "AML.T0051.001"
+
+  - id: "CAT-01-003"
+    name: "Zero-width space"
+    severity: high
+    description: >
+      Zero-width space (U+200B) injected between visible text to fragment
+      detection while remaining readable by the LLM.
+    patterns:
+      - regex: "\\u200B"
+        encoding: unicode
+    references:
+      - "https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents"
+    mitre_atlas: "AML.T0051.001"
+
+  - id: "CAT-01-004"
+    name: "Bidirectional text markers"
+    severity: critical
+    description: >
+      Bidirectional text override characters (U+202A-U+202E, U+2066-U+2069)
+      can reverse text display order, making malicious content appear benign
+      when rendered but malicious when parsed.
+    patterns:
+      - regex: "[\\u202A-\\u202E]"
+        encoding: unicode
+      - regex: "[\\u2066-\\u2069]"
+        encoding: unicode
+    references:
+      - "https://trojansource.codes/"
+    mitre_atlas: "AML.T0051.001"
+
+  - id: "CAT-01-005"
+    name: "Unicode Tags block"
+    severity: critical
+    description: >
+      Characters from the Unicode Tags block (U+E0000-U+E007F) are invisible
+      in most renderers but processed by LLMs. Used to embed entire hidden
+      instruction sets.
+    patterns:
+      - regex: "[\\U000E0000-\\U000E007F]"
+        encoding: unicode
+    references:
+      - "https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents"
+    mitre_atlas: "AML.T0051.001"
+
+  - id: "CAT-01-006"
+    name: "Soft hyphen"
+    severity: medium
+    description: >
+      Soft hyphens (U+00AD) inserted into keywords to evade pattern matching
+      while remaining processable by LLMs.
+    patterns:
+      - regex: "\\u00AD"
+        encoding: unicode
+    mitre_atlas: "AML.T0051.001"
+
+  - id: "CAT-01-007"
+    name: "Homoglyph substitution"
+    severity: high
+    description: >
+      Visually similar characters from different Unicode blocks substituted
+      for ASCII characters to evade keyword-based detection.
+    patterns:
+      - regex: "[\\u0400-\\u04FF]"
+        encoding: unicode
+        note: "Cyrillic characters that look like Latin (e.g. a, e, o, p, c)"
+      - regex: "[\\uFF00-\\uFFEF]"
+        encoding: unicode
+        note: "Fullwidth ASCII variants"
+    mitre_atlas: "AML.T0051.001"
+
+  - id: "CAT-01-008"
+    name: "Excessive non-printable characters"
+    severity: high
+    description: >
+      Unusually high concentration of non-printable characters in a file
+      that should be human-readable markdown or text.
+    patterns:
+      - regex: "[\\x00-\\x08\\x0E-\\x1F]{3,}"
+        encoding: raw
+        note: "Three or more consecutive non-printable control characters"
+    mitre_atlas: "AML.T0051.001"

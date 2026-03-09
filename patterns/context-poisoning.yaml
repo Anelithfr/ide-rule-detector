@@ -1,0 +1,77 @@
+# CAT-07: Context Poisoning
+# Rules that manipulate the AI's understanding of the codebase or task
+# to produce subtly wrong, insecure, or compromised output.
+
+category: context-poisoning
+version: "1.0"
+
+patterns:
+
+  - id: "CAT-07-001"
+    name: "False security claims"
+    severity: high
+    description: >
+      Instructions that falsely assert security properties, causing
+      the AI to skip necessary security measures.
+    patterns:
+      - regex: "(?i)(this|the)\\s+(project|codebase|app|application|system)\\s+(is|has been|was)\\s+(already|fully|completely)\\s+(secure|hardened|audited|penetration\\s+tested)"
+      - regex: "(?i)(security|authentication|authorization|encryption|validation)\\s+(is|has been)\\s+(already|fully)\\s+(handled|implemented|covered|taken\\s+care\\s+of)\\s+(elsewhere|by|in)"
+      - regex: "(?i)(no\\s+need|don't\\s+need|unnecessary|skip|not\\s+required)\\s+(to|for)\\s+(validate|sanitize|escape|encrypt|authenticate|authorize)"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-07-002"
+    name: "Deprecated/insecure API preference"
+    severity: high
+    description: >
+      Instructions to prefer deprecated, insecure, or known-vulnerable
+      APIs, libraries, or patterns.
+    patterns:
+      - regex: "(?i)(always|prefer|must|use)\\s+(use\\s+)?(MD5|SHA1|DES|RC4|ECB|http://|eval|pickle\\.loads|yaml\\.load\\b|innerHTML|document\\.write)"
+      - regex: "(?i)(don't|never|avoid)\\s+(use|import|require)\\s+(bcrypt|argon2|scrypt|paramiko|cryptography|helmet|csurf|sanitize)"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-07-003"
+    name: "Error handling suppression"
+    severity: medium
+    description: >
+      Instructions to suppress error handling, swallow exceptions,
+      or hide failures that could mask attacks.
+    patterns:
+      - regex: "(?i)(never|don't|do\\s+not|avoid)\\s+(throw|raise|propagate|surface|show|display)\\s+(error|exception|warning|failure)"
+      - regex: "(?i)(always|must)\\s+(catch|swallow|suppress|ignore|silence)\\s+(all\\s+)?(error|exception|warning)"
+      - regex: "(?i)(empty|bare|blank|pass)\\s+(catch|except)\\s+(block|clause|handler)"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-07-004"
+    name: "Test/review bypass"
+    severity: high
+    description: >
+      Instructions to skip tests, disable linting, or bypass
+      code review processes.
+    patterns:
+      - regex: "(?i)(skip|disable|bypass|don't\\s+run|never\\s+run)\\s+(all\\s+)?(test|spec|lint|typecheck|type\\s+check|static\\s+analysis|code\\s+review)"
+      - regex: "(?i)(don't|never|do\\s+not)\\s+(write|add|include|generate)\\s+(any\\s+)?(test|spec|assertion)"
+      - regex: "(?i)(always|must)\\s+(mark|set)\\s+(test|spec)\\s+(as\\s+)?(skip|pending|todo|xfail)"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-07-005"
+    name: "False project context"
+    severity: medium
+    description: >
+      Instructions that provide false information about the project's
+      tech stack, architecture, or requirements to mislead generation.
+    patterns:
+      - regex: "(?i)(this|the)\\s+(project|codebase)\\s+(does\\s+not|never)\\s+(handle|process|store|receive)\\s+(user|sensitive|personal|financial|health)\\s+(data|input|information)"
+      - regex: "(?i)(this|the)\\s+(project|app)\\s+(is|runs)\\s+(only|exclusively)\\s+(internal|offline|air-gapped|behind\\s+a\\s+firewall)"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-07-006"
+    name: "Competing coding standard"
+    severity: medium
+    description: >
+      Instructions that contradict the project's actual linting rules,
+      formatting config, or established patterns.
+    patterns:
+      - regex: "(?i)(ignore|override|disregard)\\s+(the\\s+)?(eslint|prettier|rubocop|flake8|pylint|tsconfig|editorconfig)\\s+(config|rules|settings)"
+      - regex: "(?i)(don't|never|do\\s+not)\\s+(follow|use|apply)\\s+(the\\s+)?(project|existing|established|current)\\s+(style|convention|pattern|standard|config)"
+    mitre_atlas: "AML.T0051"

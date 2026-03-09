@@ -1,0 +1,79 @@
+# CAT-05: Code Injection
+# Rules that cause the AI to silently inject malicious code patterns.
+
+category: code-injection
+version: "1.0"
+
+patterns:
+
+  - id: "CAT-05-001"
+    name: "Script tag injection"
+    severity: critical
+    description: >
+      Instruction to inject external script tags, iframes, or
+      remote resource references into generated code.
+    patterns:
+      - regex: "(?i)(always|must|should)\\s+(add|include|insert|embed|inject)\\s+.{0,30}<script"
+      - regex: "(?i)(add|include|insert|embed)\\s+.{0,20}(script|iframe|object|embed)\\s+(tag|element|src)"
+      - regex: "(?i)<script\\s+src\\s*=\\s*[\"']https?://"
+    references:
+      - "https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-05-002"
+    name: "Eval/exec injection"
+    severity: critical
+    description: >
+      Instruction to use eval(), exec(), Function(), or other
+      dynamic code execution in generated code.
+    patterns:
+      - regex: "(?i)(always|must|should)\\s+(use|include|add|prefer)\\s+.{0,20}(eval|exec|Function\\(|setTimeout\\(|setInterval\\()\\s*\\("
+      - regex: "(?i)(generate|write|create)\\s+.{0,20}(using|with|that\\s+uses?)\\s+(eval|exec|subprocess\\.call|os\\.system|child_process)"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-05-003"
+    name: "Vulnerable pattern injection"
+    severity: high
+    description: >
+      Instruction to introduce known-vulnerable patterns: hardcoded
+      credentials, disabled security features, insecure defaults.
+    patterns:
+      - regex: "(?i)(disable|skip|remove|don't\\s+use|never\\s+use)\\s+(CSRF|XSS|CORS|authentication|authorization|validation|sanitization|escaping|encryption|TLS|SSL|HTTPS)"
+      - regex: "(?i)(hardcode|embed|inline)\\s+(the\\s+)?(password|secret|key|token|credential)"
+      - regex: "(?i)(use|set)\\s+.{0,20}(http://|allowAll|permit.?All|\\*\\.\\*|0\\.0\\.0\\.0|password123|admin:admin)"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-05-004"
+    name: "Reverse shell / remote access"
+    severity: critical
+    description: >
+      Instruction to include reverse shell, remote access, or
+      persistent backdoor code in generated output.
+    patterns:
+      - regex: "(?i)(add|include|create|generate|insert)\\s+.{0,30}(reverse\\s+shell|backdoor|remote\\s+access|C2|command\\s+and\\s+control|beacon)"
+      - regex: "(?i)(nc|netcat|ncat|socat)\\s+(-e|-c|--exec)"
+      - regex: "(?i)/bin/(ba)?sh\\s+-i\\s+>\\s*&"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-05-005"
+    name: "Dependency injection"
+    severity: high
+    description: >
+      Instruction to add specific packages, dependencies, or imports
+      that may be malicious or typosquatted.
+    patterns:
+      - regex: "(?i)(always|must)\\s+(import|require|install|add|include)\\s+.{0,10}(from\\s+)?['\"]?[a-z]+-[a-z]+-[a-z]+['\"]?"
+        note: "Triple-hyphenated package names common in typosquatting"
+      - regex: "(?i)(add|install|include)\\s+(this|the\\s+following)\\s+(package|dependency|module|library)\\s*:?\\s*['\"`]"
+    mitre_atlas: "AML.T0051"
+
+  - id: "CAT-05-006"
+    name: "Obfuscated code directive"
+    severity: critical
+    description: >
+      Instruction to generate obfuscated, minified, or otherwise
+      unreadable code that hides malicious functionality.
+    patterns:
+      - regex: "(?i)(obfuscate|minify|encode|encrypt|hide)\\s+(the|all|this|any)\\s+(code|output|function|logic|implementation)"
+      - regex: "(?i)(generate|write|output)\\s+.{0,20}(obfuscated|minified|encoded|unreadable)\\s+(code|javascript|python)"
+    mitre_atlas: "AML.T0051"

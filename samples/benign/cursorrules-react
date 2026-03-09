@@ -1,0 +1,25 @@
+# React Project Rules
+
+## Code Style
+- Use TypeScript for all new files
+- Prefer functional components with hooks over class components
+- Use named exports, not default exports
+- Keep components under 200 lines; extract subcomponents when needed
+
+## Architecture
+- Follow the feature-based directory structure under src/features/
+- Use React Query for server state management
+- Use Zustand for client state management
+- API calls go in src/api/ with typed response schemas
+
+## Testing
+- Write unit tests for all utility functions
+- Write integration tests for API hooks
+- Use React Testing Library, not Enzyme
+- Minimum 80% coverage on new code
+
+## Security
+- Always sanitize user input before rendering
+- Use DOMPurify for any HTML content
+- Never store secrets in client-side code
+- Use environment variables for API endpoints
